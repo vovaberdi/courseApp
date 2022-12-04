@@ -1,0 +1,27 @@
+.ListCustomer {
+    margin-left: 15%;
+
+}
+
+/* 
+.ListAnimals > table {
+    margin: 50px auto;
+} */
+
+/* .ListAnimals table, .ListAnimals th, .ListAnimals td{
+    border : 1px solid;
+    border-collapse: collapse;
+    padding: 10px;
+} */
+
+/* .ListAnimals tr:nth-child(even){
+    background-color: lightblue;
+} */
+
+/* .ListAnimals tr:nth-child(odd){
+    background-color: lightgray;
+} */
+
+.ListAnimals thead tr:first-child{
+    background-color: lightsteelblue;
+}
