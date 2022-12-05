@@ -9,6 +9,7 @@ class Student{
     address:string="";
     email:string="";
     signature:string="";
+    instructor:string="";
 }
 
 export default Student;

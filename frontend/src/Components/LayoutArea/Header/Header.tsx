@@ -18,6 +18,10 @@ function Header(): JSX.Element {
             <NavLink className="myPages" to="/ListStudents">ListStudents</NavLink>
             <span> | </span>           
             <NavLink className="myPages" to="/AddStudent">AddStudent</NavLink>
+            <span> | </span>           
+            <NavLink className="myPages" to="/AddInstructor">AddInstructor</NavLink>
+            <span> | </span>           
+            <NavLink className="myPages" to="/ListInstructor">ListInstructors</NavLink>
             <br/>
             <Divider boxShadow='dark-lg' mt="1rem" orientation='horizontal' />
         </div>
