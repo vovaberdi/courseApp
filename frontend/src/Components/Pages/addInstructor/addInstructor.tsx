@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form"
-import {FormControl,FormLabel,FormErrorMessage,FormHelperText, Input, Button, Container, Stack, RadioGroup, Radio, Select, Textarea,} from '@chakra-ui/react'
-import Course from "../../../models/partsModal";
-import Signature from "../../Signature/Signature";
+import {FormControl,FormLabel, Input, Button, Container,} from '@chakra-ui/react'
 import { login } from "../../../store/student-state";
 import { store } from "../../../store/store";
 import "./addInstructor.css";
 import Instructor from "../../../models/instructorModel";
+import SignatureCanvas from "react-signature-canvas";
+
 
 function AddInstructor(): JSX.Element {
 
@@ -16,14 +16,33 @@ function AddInstructor(): JSX.Element {
     const navigat = useNavigate();
    
     const send = async (newInstructor:Instructor) =>{
+        newInstructor.signature = signature;
+
         const url = "http://localhost:3001/instructor/add";
         await axios.post(url, newInstructor)
         .catch(error =>{console.log(error);});
-
-        // store.dispatch(login(newStudent));
-        // localStorage.setItem("student", JSON.stringify(newStudent));
         navigat("/ListInstructor");
     }
+
+    // ----this is handle signature-----
+    const padRef = useRef(null) as React.MutableRefObject<any>;
+    const [signature, setCanvas] = useState<string>('');
+    const [canvasVisibility, setCanvasVisibility] = useState(false);
+
+    const clearSignatureCanvas = useCallback(() => {
+      padRef?.current?.clear();
+      setCanvas('');
+      setCanvasVisibility(false);
+    }, []);
+  
+    const handleGetCanvas = useCallback(() => {
+        
+      const signature = (padRef?.current?.toDataURL());
+      store.dispatch(login(signature))
+    
+      setCanvas(signature);
+      setCanvasVisibility(true);
+    }, []);
     
     return (
         <div className="addInstructor">
@@ -57,11 +76,12 @@ function AddInstructor(): JSX.Element {
             
             <Input mt={4} {...register("license_exp_date")} placeholder="license_exp_date"size="md" type="datetime-local"/>
 
-            <p>signature</p>
-            <Signature {...register} />
+            <p>signHere  <button onClick={clearSignatureCanvas}>🧹</button> </p>
+
+            <SignatureCanvas ref={padRef}canvasProps={{width: 415, height: 200}}/> 
 
             </FormControl>
-            <Button mt={4} mb={4} colorScheme='teal' type='submit'> Submit</Button>
+            <Button mt={4} mb={4} onClick={handleGetCanvas} colorScheme='teal' type='submit'> Submit</Button>
         </form>
         </Container>
 			

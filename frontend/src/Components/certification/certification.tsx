@@ -13,18 +13,45 @@ function Certification(props:Student): JSX.Element {
 
     const handleDownloadPdf = async () => {
         const element = printRef.current;
-        const canvas = await html2canvas(element, {width: 950, height: 1500});
+        const canvas = await html2canvas(element, {width: 900, height: 1100});
         const data = canvas.toDataURL('image/png');
     
-        const pdf = new jsPDF('p', 'in', [150, 300]);
+        const pdf = new jsPDF('p', 'pt','a4',true);
         const imgProperties = pdf.getImageProperties(data);
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight =
-          (imgProperties.height * pdfWidth) / imgProperties.width;
+        const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
     
         pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save('print.pdf')
+        pdf.save(`${props.first_name+'_'+props.last_name}.pdf`)
+        send(pdf);
+        
+        // let formData = new FormData();
+        //  formData.append(`${props.first_name+'_'+props.last_name}`, pdf)
+       
          }
+          const send = async (file:any) =>{
+            const formData = new FormData();
+            formData.append("pdf", file[0]);
+            const url = "http://localhost:3001/student/pdf";
+            await axios.post(url, formData).then((response)=>{console.log(response)})
+            .catch(error =>{console.log(error);});
+        }
+        //  const send = (file:any)=>{
+        //  let bodyFormData = new FormData();
+        //    bodyFormData.append('table_name', 'incident');
+        //    bodyFormData.append('table_sys_id', '46e2fee9a9fe19810049b49dee0daf58');
+        //    bodyFormData.append('uploadFile', file);
+        //     axios({
+        //       method: "post",
+        //       url: "http://localhost:3001/student/pdf",
+        //       data: bodyFormData,
+        //        headers: { "Content-Type": "multipart/form-data" },
+        //        })
+        //     }
+         
+
+        
+        
 
 
 
@@ -110,34 +137,19 @@ function formatDate(date: { getFullYear: () => any; getMonth: () => number; getD
                 <p>קונסטרוקציה; (8) בטיפול בעצים וגיזומם;(9) בהקמת בימות והתקנת מערכות</p>
                 <p>תאורה והגברה;(מחק את המיותר), וכי הוא עומד בכל הדרישות המפורטות בפרקים ב' ו – ג' לתקנות</p>
                 <p>הבטיחות בעבודה (עבודה בגובה), התשס"ז – 2006 .(להלן- התקנות).</p>
-                <p><span className="underlineText">{formatDate(new Date())}</span> <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> <img src={`${signature}`} /></p>
+                <p><span className="underlineText">{formatDate(new Date())}</span> <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> <img src={instructor?.signature} /></p>
                 <p>   תאריך  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   שם המדריך       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   חתימה</p>
             </div>
             <div>
                 <h5><p className="boldUnderline">ו. הצהרת העובד בגובה</p></h5>
                 <p>אני מצהיר בזה שכל הנתונים האישיים המפורטים בסעיף (ג) לעיל נכונים, וכי הודרכתי לבצע עבודה </p>
                 <p>בגובה, על ידי מדריך העבודה בגובה <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> כנדרש בתקנה 5(2).</p>
-                <p><span className="underlineText">{formatDate(new Date())}</span> <span className="underlineText">{props.first_name}</span> <img src={`${signature}`} /></p>
+                <p><span className="underlineText">{formatDate(new Date())}</span> <span className="underlineText">{props.first_name}</span> <img src={props.signature} /></p>
                 <p>   תאריך  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   שם העובד      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   חתימה</p>
             </div>
         </div>
     </div>
-    {/* <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> */}
-    {/* <span className="underlineText">{instructor?.last_name}</span> */}
-
-    {/* <span className="underlineText">{instructor?.address}</span>
-
-    <span className="underlineText">{instructor?.personal_id}</span>
-    <span className="underlineText">{instructor?.data_of_birth.toString().split('T')[0]}</span>
-
-    <span className="underlineText">{instructor?.tel}</span>
-    <span className="underlineText">{instructor?.years_of_experience}</span>
-    <span className="underlineText">{instructor?.license_number}</span>
-    <span className="underlineText">{instructor?.license_exp_date.toString().split('T')[0]}</span> */}
-
-
-
-     
+   
 			
         </div>
     );

@@ -1,30 +1,29 @@
 import "./AddStudent.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form"
-import {FormControl,FormLabel,FormErrorMessage,FormHelperText, Input, Button, Container, Stack, RadioGroup, Radio, Select, Textarea,} from '@chakra-ui/react'
+import {FormControl,FormLabel, Input, Button, Container, Select,} from '@chakra-ui/react'
 import Course from "../../../models/partsModal";
-import Signature from "../../Signature/Signature";
 import { login } from "../../../store/student-state";
 import { store } from "../../../store/store";
 import Student from "../../../models/studentModal";
+import SignatureCanvas from "react-signature-canvas";
+
 
 function AddStudent(): JSX.Element {
 
 
     const [course, setCourses] = useState<Course[]>([]);
-
     const {register, handleSubmit} = useForm<Student>();
     const navigat = useNavigate();
+
    
     const send = async (newStudent:Student) =>{
         const url = "http://localhost:3001/student/add";
-        await axios.post(url, newStudent)
+        newStudent.signature = signature;
+        await axios.post(url, newStudent).then((response)=>{console.log(response)})
         .catch(error =>{console.log(error);});
-
-        // store.dispatch(login(newStudent));
-        // localStorage.setItem("student", JSON.stringify(newStudent));
         navigat("/ListStudents");
     }
 
@@ -35,6 +34,27 @@ function AddStudent(): JSX.Element {
             setCourses(response.data);
         }).catch(error=>{console.log(error)});
     },[])
+
+// ----this handle signature-----
+    const padRef = useRef(null) as React.MutableRefObject<any>;
+    const [signature, setCanvas] = useState<string>('');
+    const [canvasVisibility, setCanvasVisibility] = useState(false);
+
+    const clearSignatureCanvas = useCallback(() => {
+      padRef?.current?.clear();
+      setCanvas('');
+      setCanvasVisibility(false);
+    }, []);
+  
+    const handleGetCanvas = useCallback(() => {
+        
+      const signature = (padRef?.current?.toDataURL());
+      store.dispatch(login(signature))
+    
+      setCanvas(signature);
+      setCanvasVisibility(true);
+    }, []);
+
     
 
     return (
@@ -67,11 +87,12 @@ function AddStudent(): JSX.Element {
 
             <FormLabel>email</FormLabel>
             <Input mb={4} {...register("email")} placeholder='email' />
-            <p>signature</p>
-            <Signature {...register} />
+            <p>signHere  <button onClick={clearSignatureCanvas}>🧹</button> </p>
+
+            <SignatureCanvas ref={padRef}canvasProps={{width: 415, height: 200}}/>
 
             </FormControl>
-            <Button mt={4} mb={4} colorScheme='teal' type='submit'> Submit</Button>
+            <Button mt={4} onClick={handleGetCanvas} mb={4} colorScheme='teal' type='submit'> Submit</Button>
           </form>
           </Container>
         </div>

@@ -76,14 +76,14 @@ function ListStudents(): JSX.Element {
                         <Td>{item.address}</Td>
                         <Td>{item.email}</Td>
                         <Td>
-                            <Select onChange={selectChange}  mt="4rem" placeholder='Select course'>
+                            <Select onChange={selectChange}   mt="4rem" placeholder='Select course'>
                                     {instructor.map((item, i) => (
                                     <option  key={i}value={item.id}>{item.first_name}</option>))}
                             </Select>
                         </Td>
-                        <Td><img src={`${signature}`} /></Td>
+                        <Td><img src={item.signature} /></Td>
                         <Td><PopDeleteBtn id={item.id} course_id={item.course_id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} data_of_birth={item.data_of_birth} tel={item.tel} address={item.address} email={item.email} signature={""} instructor={""}/></Td>
-                        <Td><MyModal id={item.id} course_id={item.course_id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} tel={item.tel} address={item.address} email={item.email} signature={`${signature}`} data_of_birth={item.data_of_birth} instructor={`${selectedOption}`}/></Td>
+                        <Td><MyModal id={item.id} course_id={item.course_id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} tel={item.tel} address={item.address} email={item.email} signature={item.signature} data_of_birth={item.data_of_birth} instructor={`${selectedOption}`}/></Td>
                     </Tr>)} 
                 </Tbody>
             </Table>
