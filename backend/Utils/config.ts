@@ -5,7 +5,7 @@ class Config {
     // mysql database
     public mySQLhost = "localhost";
     public mySQLUser = "root";
-    public mySQLPassword = "12345678";
+    public mySQLPassword = "";
     public mySQLdb = "collage";
     //another database
 }
