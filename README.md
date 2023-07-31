@@ -30,3 +30,15 @@ Technical Stack:
 Frontend: React
 Backend: Node.js, Express
 Database: MySQL
+
+
+![](https://github.com/vovaberdi/courseApp/blob/main/Screen%20Shot%202023-07-31%20at%2011.36.53.png)
+
+
+![](https://github.com/vovaberdi/courseApp/blob/main/Screen%20Shot%202023-07-31%20at%2011.37.38.png)
+
+
+![](https://github.com/vovaberdi/courseApp/blob/main/Screen%20Shot%202023-07-31%20at%2011.38.16.png)
+
+
+![](https://github.com/vovaberdi/courseApp/blob/main/Screen%20Shot%202023-07-31%20at%2011.38.35.png)
