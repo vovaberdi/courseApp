@@ -1,6 +1,6 @@
 App Name: Certified Heights
 Description:
-Certified Heights is a comprehensive full-stack application designed to facilitate certified work at heights by providing certified training to users. The app combines Node.js, Express, and MySQL on the backend, and React on the frontend to create a seamless user experience. Its main functionalities include user data storage with digital signatures and automated PDF certificate generation.
+Certified Heights is a comprehensive full-stack application designed to facilitate certified work at heights by providing certified training to users. The app combines Node.js, Express, and MySQL on the backend, and React on the frontend to create a seamless user experience. Its main functionalities include user data storage with digital signatures, automated PDF certificate generation, and automatic certification delivery via email.
 
 Key Features:
 Certified Work at Heights Training: Certified Heights offers a structured training program for users seeking to work at heights safely and efficiently. The app ensures that all users receive proper certification for their tasks.
@@ -10,6 +10,8 @@ User Data Management: Certified Heights securely stores user data, including per
 Digital Signature Integration: Users can digitally sign their training completion records, adding an extra layer of authenticity to their certifications. The digital signature feature ensures the legitimacy of the certificates.
 
 Automated Certificate Generation: Upon successful completion of the training program, Certified Heights automatically generates a professional PDF certificate. This feature eliminates manual certificate preparation, saving time and effort.
+
+Automatic Certification Delivery: After generating the certificate, Certified Heights takes a step further by automatically sending the certification via email to the student's registered email address. This seamless process ensures that users receive their certifications promptly.
 
 User-Friendly Interface: The frontend of Certified Heights is built using React, offering an intuitive and user-friendly interface. Navigating through the app is easy, and the design provides a pleasant user experience.
 
@@ -23,6 +25,8 @@ Training and Certification: Once registered, users can access the certified work
 Training Completion: After successfully completing the training program, users can digitally sign their training records.
 
 Automated Certificate Generation: Upon confirming the training completion and signature, Certified Heights automatically generates a PDF certificate. Users can download and print the certificate for their records.
+
+Automatic Certification Delivery: The generated certificate is then sent automatically to the student's email address, ensuring hassle-free certification delivery.
 
 Data Management: The app efficiently stores user data, allowing users to access their training history and certificates whenever needed.
 
