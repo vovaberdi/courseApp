@@ -38,7 +38,7 @@ import React from "react";
           <ModalHeader>Modal Title</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-          <Certification id={props.id} course_id={props.course_id} first_name={props.first_name} last_name={props.last_name} personal_id={props.personal_id} tel={props.tel} address={props.address} email={props.email} data_of_birth={props.data_of_birth} signature={props.signature} instructor={props.instructor} />
+          <Certification id={props.id} course_id={props.course_id} first_name={props.first_name} last_name={props.last_name} personal_id={props.personal_id} tel={props.tel} address={props.address} email={props.email} data_of_birth={props.data_of_birth} signature={props.signature} companyId={props.companyId} instructor={props.instructor} />
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>

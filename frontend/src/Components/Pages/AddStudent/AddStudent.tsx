@@ -9,30 +9,42 @@ import { login } from "../../../store/student-state";
 import { store } from "../../../store/store";
 import Student from "../../../models/studentModal";
 import SignatureCanvas from "react-signature-canvas";
+import Company from "../../../models/companyModel";
+import API_URLS from "../../../config";
 
 
 function AddStudent(): JSX.Element {
 
 
     const [course, setCourses] = useState<Course[]>([]);
+    const [company, setCompany] = useState<Company[]>([]);
     const {register, handleSubmit} = useForm<Student>();
-    const navigat = useNavigate();
+    const navigate = useNavigate();
 
    
     const send = async (newStudent:Student) =>{
-        const url = "http://localhost:3001/student/add";
+        const url = API_URLS.addStudent;
         newStudent.signature = signature;
         await axios.post(url, newStudent).then((response)=>{console.log(response)})
         .catch(error =>{console.log(error);});
-        navigat("/ListStudents");
+        navigate("/ListStudents");
     }
 
     useEffect(()=>{
-        const url = "http://localhost:3001/student/allCourses";
-        axios.get(url)
+
+        const url1 = API_URLS.allCourses;
+        axios.get(url1)
         .then((response)=>{
             setCourses(response.data);
         }).catch(error=>{console.log(error)});
+
+        const url2 = API_URLS.allCompany
+        axios.get(url2)
+        .then((response)=>{
+            setCompany(response.data);
+            console.log(company);
+        }).catch(error=>{console.log(error)});
+
     },[])
 
 // ----this handle signature-----
@@ -66,6 +78,11 @@ function AddStudent(): JSX.Element {
             <Select {...register("course_id")}  isRequired mt="4rem" placeholder='Select course'>
             {course.map((item, i) => (
             <option key={i}value={item.id}>{item.name}</option>))}
+            </Select>
+
+            <Select {...register("companyId")}  isRequired mt="1rem" placeholder='company'>
+            {company.map((item, i) => (
+            <option key={i}value={item.id}>{item.first_name}</option>))}
             </Select>
 
             <FormLabel>first_name</FormLabel>

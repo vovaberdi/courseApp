@@ -10,6 +10,7 @@ const addStudent = async (student: Student): Promise<Student> => {
     INSERT INTO students VALUES
     (DEFAULT,
      ${student.course_id},
+     ${student.companyId},
     '${student.first_name}',
     '${student.last_name}',
      ${student.personal_id},

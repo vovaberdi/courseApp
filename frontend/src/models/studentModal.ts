@@ -1,6 +1,7 @@
 class Student{
     id:number=0;
     course_id:number=0;
+    companyId?: number;
     first_name:string="";
     last_name:string="";
     personal_id:number=0;

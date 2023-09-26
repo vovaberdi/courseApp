@@ -8,6 +8,7 @@ import { store } from "../../../store/store";
 import "./addInstructor.css";
 import Instructor from "../../../models/instructorModel";
 import SignatureCanvas from "react-signature-canvas";
+import API_URLS from "../../../config";
 
 
 function AddInstructor(): JSX.Element {
@@ -18,7 +19,7 @@ function AddInstructor(): JSX.Element {
     const send = async (newInstructor:Instructor) =>{
         newInstructor.signature = signature;
 
-        const url = "http://localhost:3001/instructor/add";
+        const url = API_URLS.addInstructor;
         await axios.post(url, newInstructor)
         .catch(error =>{console.log(error);});
         navigat("/ListInstructor");

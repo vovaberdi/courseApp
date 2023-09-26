@@ -15,13 +15,17 @@ function Header(): JSX.Element {
             
             <NavLink className="myPages" to="/">Home</NavLink>
             <span> | </span>
-            <NavLink className="myPages" to="/ListStudents">ListStudents</NavLink>
+            <NavLink className="myPages" to="/ListStudents">StudentsList</NavLink>
             <span> | </span>           
             <NavLink className="myPages" to="/AddStudent">AddStudent</NavLink>
             <span> | </span>           
             <NavLink className="myPages" to="/AddInstructor">AddInstructor</NavLink>
             <span> | </span>           
-            <NavLink className="myPages" to="/ListInstructor">ListInstructors</NavLink>
+            <NavLink className="myPages" to="/ListInstructor">InstructorsList</NavLink>
+            <span> | </span> 
+            <NavLink className="myPages" to="/AddCompany">AddCompany</NavLink>
+            <span> | </span>              
+            <NavLink className="myPages" to="/CompanyList">CompanyList</NavLink>
             <br/>
             <Divider boxShadow='dark-lg' mt="1rem" orientation='horizontal' />
         </div>

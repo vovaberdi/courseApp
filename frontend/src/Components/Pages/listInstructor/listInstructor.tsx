@@ -6,13 +6,19 @@ import { MyModal } from "../../popModal/popModal";
 import { store } from "../../../store/store";
 import PopDeleteBtn from "../../popDeleteBtn/popDeleteBtn";
 import Instructor from "../../../models/instructorModel";
+import API_URLS from "../../../config";
 
 function ListInstructor(): JSX.Element {
 
     const [instructor, setInstructor] = useState<Instructor[]>([]);
+
+    const handleDeleteCompany = (deletedStudentId: number) => {
+        setInstructor(instructor.filter(item => item.id !== deletedStudentId));
+    };
+
  
     useEffect(() => {
-         const url = "http://localhost:3001/instructor/all";
+         const url = API_URLS.allInstructors;
          axios.get(url)
         .then((response) => {
 
@@ -29,7 +35,7 @@ function ListInstructor(): JSX.Element {
         <div className="listInstructor">
 
 
-<TableContainer maxWidth="80%" align-self="center" rounded='md' boxShadow='dark-lg'>
+<TableContainer maxWidth="100%" align-self="center" rounded='md' boxShadow='dark-lg'>
                 <Table variant='striped' colorScheme='teal'>
                 <Thead>
                     <Tr>
@@ -45,7 +51,6 @@ function ListInstructor(): JSX.Element {
                         <Th>license_exp_date</Th>
                         <Th>signature</Th>
                         <Th>Delete</Th>
-                        <Th>Completed</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -61,8 +66,7 @@ function ListInstructor(): JSX.Element {
                         <Td>{item.years_of_experience}</Td>
                         <Td>{item.license_exp_date.toString().split('T')[0]}</Td>
                         <Td><img src={item.signature} /></Td>
-                        <Td><PopDeleteBtn id={item.id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} data_of_birth={item.data_of_birth} tel={item.tel} address={item.address} signature={""} course_id={0} email={""} instructor={""}/></Td>
-                        <Td><MyModal id={item.id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} tel={item.tel} address={item.address} signature={`${signature}`} data_of_birth={item.data_of_birth} course_id={0} email={""} instructor={""}/></Td>
+                        <Td><PopDeleteBtn itemType="instructor" id={item.id} onDelete={() => handleDeleteCompany(item.id)} /></Td>
                     </Tr>)} 
                 </Tbody>
             </Table>

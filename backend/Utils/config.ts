@@ -3,7 +3,8 @@
 class Config { 
     public port = 3001; 
     // mysql database
-    public mySQLhost = "localhost";
+    // public mySQLhost = 'db';
+    public mySQLhost = 'localhost';
     public mySQLUser = "root";
     public mySQLPassword = "";
     public mySQLdb = "collage";

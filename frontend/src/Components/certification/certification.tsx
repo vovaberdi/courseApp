@@ -5,154 +5,281 @@ import axios from "axios";
 import Instructor from "../../models/instructorModel";
 import { useEffect, useState } from "react";
 import React from "react";
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-
-function Certification(props:Student): JSX.Element {
-    const printRef = React.useRef() as React.MutableRefObject<any>;
-
-    const handleDownloadPdf = async () => {
-        const element = printRef.current;
-        const canvas = await html2canvas(element, {width: 900, height: 1100});
-        const data = canvas.toDataURL('image/png');
-    
-        const pdf = new jsPDF('p', 'pt','a4',true);
-        const imgProperties = pdf.getImageProperties(data);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
-    
-        pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${props.first_name+'_'+props.last_name}.pdf`)
-        send(pdf);
-        
-        // let formData = new FormData();
-        //  formData.append(`${props.first_name+'_'+props.last_name}`, pdf)
-       
-         }
-          const send = async (file:any) =>{
-            const formData = new FormData();
-            formData.append("pdf", file[0]);
-            const url = "http://localhost:3001/student/pdf";
-            await axios.post(url, formData).then((response)=>{console.log(response)})
-            .catch(error =>{console.log(error);});
-        }
-        //  const send = (file:any)=>{
-        //  let bodyFormData = new FormData();
-        //    bodyFormData.append('table_name', 'incident');
-        //    bodyFormData.append('table_sys_id', '46e2fee9a9fe19810049b49dee0daf58');
-        //    bodyFormData.append('uploadFile', file);
-        //     axios({
-        //       method: "post",
-        //       url: "http://localhost:3001/student/pdf",
-        //       data: bodyFormData,
-        //        headers: { "Content-Type": "multipart/form-data" },
-        //        })
-        //     }
-         
-
-        
-        
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import Company from "../../models/companyModel";
+import API_URLS from "../../config";
 
 
+function Certification(props: Student): JSX.Element {
 
-    const [instructor, setInstructor] = useState<Instructor>();
+  const printRef = React.useRef() as React.MutableRefObject<any>;
 
+  const handleDownloadPdf = async () => {
+    const element = printRef.current;
+    const canvas = await html2canvas(element, { width: 900, height: 1100 });
+    const data = canvas.toDataURL("image/png");
 
-    useEffect(() => {
-      const url = `http://localhost:3001/instructor/${props.instructor}`;
-      axios.get(url)
-     .then((response) => {console.log(response.data);
+    const pdf = new jsPDF("p", "pt", "a4", true);
+    const imgProperties = pdf.getImageProperties(data);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
 
-       setInstructor(response.data[0]);
-
-     }).catch((error) => {console.log("error", error);});
- }, []);
-
- 
-
-    const signature = store.getState().StudentState.student;
-    const date = new Date();
-
-// ✅ Reset a Date's time to midnight
-date.setHours(0, 0, 0, 0);
-
-// ✅ Format a date to YYYY-MM-DD (or any other format)
-function padTo2Digits(num: { toString: () => string; }) {
-  return num.toString().padStart(2, '0');
-}
-
-function formatDate(date: { getFullYear: () => any; getMonth: () => number; getDate: () => { toString: () => string; }; }) {
-  return [
-    date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
-  ].join('-');
-}
-
-    return (
-        <div className="certification">
-
-        <button type="button" onClick={handleDownloadPdf}>
-            Download as PDF
-        </button>
-  
-
-        
-    <div ref={printRef}>
-               
-        <div className="div1">
-        <div><p className="boldUnderlineTop">תוספת
-))2(5 תקנה)</p></div>
-        <p className="boldUnderlineTop">אישור על הדרכת עובד לביצוע עבודה בגובה</p>
-
-            <div >
-                <h5><p className="boldUnderline">א. המבצע</p></h5>
-                <p>תופש המפעל/ מבצע הבניה/ בעל מכונת הרמה/ אחר (מחק את המיותר) ________</p>
-                <p>שם ומשפחה ________________ ת.ז. _____________ שם המפעל_________________</p>
-                <p>כתובת _____________________ מיקוד ___________ טלפון _____________</p>
-            </div>
-            <div>
-                <h5><p className="boldUnderline">ב. פרטי מדריך העבודה בגובה</p></h5>
-                <p>שם ומשפחה <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> ת.ז. <span className="underlineText">{instructor?.personal_id}</span></p>
-                <p>ותק וניסיון בעבודה בגובה )בשנים( <span className="underlineText">{instructor?.years_of_experience}</span>תעודה מס'<span className="underlineText">{instructor?.license_number}</span> בתוקף עד <span className="underlineText">{instructor?.license_exp_date.toString().split('T')[0]}</span></p>
-                <p>כתובת     <span className="underlineText">{instructor?.address}</span>
- טלפון <span className="underlineText">{instructor?.tel}</span></p>
-            </div>
-            <div>
-                <h5><p className="boldUnderline">ג. פרטי העובד שהודרך לביצוע עבודה בגובה</p></h5>
-                <p>שם המשפחה <span className="underlineText">{props.last_name}</span> שם פרטי <span className="underlineText">{props.first_name}</span> שם האב _____________</p>
-                <p>מס' ת.ז. <span className="underlineText">{props.personal_id}</span> שנת לידה <span className="underlineText">{(props.data_of_birth).toString().split('T')[0]}</span> מקצוע _______________</p>
-                <p>כתובת <span className="underlineText">{props.address}</span></p>
-            </div>
-            <div>
-                <h5><p className="boldUnderline">ד. תוקף האישור</p></h5>
-                <p>האישור בתוקף מיום <span className="underlineText">{formatDate(new Date())}</span> עד יום <span className="underlineText">{formatDate(new Date(+2))}</span>(תוקף ההדרכה לא יעלה על שנתיים)</p>
-            </div>
-            <div>
-                <h5><p className="boldUnderline">ה.  הצהרת המדריך</p></h5>
-                <p>אני החתום מטה מצהיר בזה כי האדם שפרטיו מפורטים בסעיף (ג) לעיל, הודרך על </p>
-                <p>ידי לשמש כאדם העובד בגובה בתחומים אלה: (1) על סולמות;(2) מתוך סלים</p>
-                <p>להרמת אדם; (3) מתוך בימות הרמה מתרוממות ופיגומים ממוכנים; (4) בתוך</p>
-                <p>מקום מוקף;(5) מעל לפיגומים נייחים; (6) מעל גגות; (7) מעל מבנה</p>
-                <p>קונסטרוקציה; (8) בטיפול בעצים וגיזומם;(9) בהקמת בימות והתקנת מערכות</p>
-                <p>תאורה והגברה;(מחק את המיותר), וכי הוא עומד בכל הדרישות המפורטות בפרקים ב' ו – ג' לתקנות</p>
-                <p>הבטיחות בעבודה (עבודה בגובה), התשס"ז – 2006 .(להלן- התקנות).</p>
-                <p><span className="underlineText">{formatDate(new Date())}</span> <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> <img src={instructor?.signature} /></p>
-                <p>   תאריך  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   שם המדריך       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   חתימה</p>
-            </div>
-            <div>
-                <h5><p className="boldUnderline">ו. הצהרת העובד בגובה</p></h5>
-                <p>אני מצהיר בזה שכל הנתונים האישיים המפורטים בסעיף (ג) לעיל נכונים, וכי הודרכתי לבצע עבודה </p>
-                <p>בגובה, על ידי מדריך העבודה בגובה <span className="underlineText">{instructor?.first_name} {instructor?.last_name}</span> כנדרש בתקנה 5(2).</p>
-                <p><span className="underlineText">{formatDate(new Date())}</span> <span className="underlineText">{props.first_name}</span> <img src={props.signature} /></p>
-                <p>   תאריך  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   שם העובד      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   חתימה</p>
-            </div>
-        </div>
-    </div>
+    pdf.addImage(data, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`${props.last_name}.pdf`);
+    send(pdf, props.email, props.last_name);
    
-			
+
+    // let formData = new FormData();
+    //  formData.append(`${props.first_name+'_'+props.last_name}`, pdf)
+  };
+  const send = async (userFile: any, email:string, last_name:string) => {
+    var blob = userFile.output('blob');
+    const formData = new FormData();
+    formData.append("pdfFile", blob, "file.pdf");
+    formData.append('email', email); 
+    formData.append('last_name', last_name); 
+
+    const url = API_URLS.studentPdf;
+    await axios
+      .post(url, formData, {headers:{"Content-Type": "multipart/form-data"}})
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const [instructor, setInstructor] = useState<Instructor>();
+  const [company, setCompany] = useState<Company>();
+
+
+  useEffect(() => {
+
+    const url = `${API_URLS.instructor}/${props.instructor}`;
+    axios
+      .get(url)
+      .then((response) => {
+
+        setInstructor(response.data[0]);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+       console.log(props.companyId);
+      const url1= `${API_URLS.company}/${props.companyId}`;
+    axios
+      .get(url1)
+      .then((response) => {
+
+        setCompany(response.data[0]);
+        console.log(company);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+
+  }, []);
+
+  const signature = store.getState().StudentState.student;
+  const date = new Date();
+
+  // ✅ Reset a Date's time to midnight
+  date.setHours(0, 0, 0, 0);
+
+  // ✅ Format a date to YYYY-MM-DD (or any other format)
+  function padTo2Digits(num: { toString: () => string }) {
+    return num.toString().padStart(2, "0");
+  }
+
+  function formatDate(date: {
+    getFullYear: () => any;
+    getMonth: () => number;
+    getDate: () => { toString: () => string };
+  }) {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join("-");
+  }
+
+  return (
+    <div className="certification">
+      <button type="button" onClick={handleDownloadPdf}>
+        Download as PDF
+      </button>
+      
+      <div ref={printRef}>
+        <div className="div1">
+          <div>
+            <p className="boldUnderlineTop">תוספת ))2(5 תקנה)</p>
+          </div>
+          <p className="boldUnderlineTop">
+            אישור על הדרכת עובד לביצוע עבודה בגובה
+          </p>
+
+          <div>
+            <h5>
+              <p className="boldUnderline">א. המבצע</p>
+            </h5>
+            <p>
+              תופש המפעל/ מבצע הבניה/ בעל מכונת הרמה/ אחר (מחק את המיותר)
+              ________
+            </p>
+            <p>
+              שם ומשפחה  <span className="underlineText">
+                {company?.first_name + " " + company?.last_name}
+              </span> ת.ז.<span className="underlineText">{company?.personal_id}</span>
+               שם     
+              המפעל<span className="underlineText">{company?.factory_name}</span>
+
+            </p>
+            <p>
+              כתובת <span className="underlineText">{company?.address}</span> מיקוד <span className="underlineText">{company?.postal_code}</span> טלפון <span className="underlineText">{company?.tel}</span>
+            </p>
+          </div>
+          <div>
+            <h5>
+              <p className="boldUnderline">ב. פרטי מדריך העבודה בגובה</p>
+            </h5>
+            <p>
+              שם ומשפחה{" "}
+              <span className="underlineText">
+                {instructor?.first_name} {instructor?.last_name}
+              </span>{" "}
+              ת.ז.{" "}
+              <span className="underlineText">{instructor?.personal_id}</span>
+            </p>
+            <p>
+              ותק וניסיון בעבודה בגובה )בשנים({" "}
+              <span className="underlineText">
+                {instructor?.years_of_experience}
+              </span>
+              תעודה מס'
+              <span className="underlineText">
+                {instructor?.license_number}
+              </span>{" "}
+              בתוקף עד{" "}
+              <span className="underlineText">
+                {instructor?.license_exp_date.toString().split("T")[0]}
+              </span>
+            </p>
+            <p>
+              כתובת <span className="underlineText">{instructor?.address}</span>
+              טלפון <span className="underlineText">{instructor?.tel}</span>
+            </p>
+          </div>
+          <div>
+            <h5>
+              <p className="boldUnderline">
+                ג. פרטי העובד שהודרך לביצוע עבודה בגובה
+              </p>
+            </h5>
+            <p>
+              שם המשפחה <span className="underlineText">{props.last_name}</span>{" "}
+              שם פרטי <span className="underlineText">{props.first_name}</span>{" "}
+              שם האב _____________
+            </p>
+            <p>
+              מס' ת.ז.{" "}
+              <span className="underlineText">{props.personal_id}</span> שנת
+              לידה{" "}
+              <span className="underlineText">
+                {props.data_of_birth.toString().split("T")[0]}
+              </span>{" "}
+              מקצוע _______________
+            </p>
+            <p>
+              כתובת <span className="underlineText">{props.address}</span>
+            </p>
+          </div>
+          <div>
+            <h5>
+              <p className="boldUnderline">ד. תוקף האישור</p>
+            </h5>
+            <p>
+              האישור בתוקף מיום{" "}
+              <span className="underlineText">{formatDate(new Date())}</span> עד
+              יום{" "}
+              <span className="underlineText">{formatDate(new Date(+2))}</span>
+              (תוקף ההדרכה לא יעלה על שנתיים)
+            </p>
+          </div>
+          <div>
+            <h5>
+              <p className="boldUnderline">ה. הצהרת המדריך</p>
+            </h5>
+            <p>
+              אני החתום מטה מצהיר בזה כי האדם שפרטיו מפורטים בסעיף (ג) לעיל,
+              הודרך על{" "}
+            </p>
+            <p>
+              ידי לשמש כאדם העובד בגובה בתחומים אלה: (1) על סולמות;(2) מתוך סלים
+            </p>
+            <p>
+              להרמת אדם; (3) מתוך בימות הרמה מתרוממות ופיגומים ממוכנים; (4) בתוך
+            </p>
+            <p>מקום מוקף;(5) מעל לפיגומים נייחים; (6) מעל גגות; (7) מעל מבנה</p>
+            <p>
+              קונסטרוקציה; (8) בטיפול בעצים וגיזומם;(9) בהקמת בימות והתקנת
+              מערכות
+            </p>
+            <p>
+              תאורה והגברה;(מחק את המיותר), וכי הוא עומד בכל הדרישות המפורטות
+              בפרקים ב' ו – ג' לתקנות
+            </p>
+            <p>הבטיחות בעבודה (עבודה בגובה), התשס"ז – 2006 .(להלן- התקנות).</p>
+            <p>
+              <span className="underlineText">{formatDate(new Date())}</span>{" "}
+              <span className="underlineText">
+                {instructor?.first_name} {instructor?.last_name}
+              </span>{" "}
+              <img src={instructor?.signature} />
+            </p>
+            <p>
+              {" "}
+              תאריך &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+              &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; שם
+              המדריך
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              חתימה
+            </p>
+          </div>
+          <div>
+            <h5>
+              <p className="boldUnderline">ו. הצהרת העובד בגובה</p>
+            </h5>
+            <p>
+              אני מצהיר בזה שכל הנתונים האישיים המפורטים בסעיף (ג) לעיל נכונים,
+              וכי הודרכתי לבצע עבודה{" "}
+            </p>
+            <p>
+              בגובה, על ידי מדריך העבודה בגובה{" "}
+              <span className="underlineText">
+                {instructor?.first_name} {instructor?.last_name}
+              </span>{" "}
+              כנדרש בתקנה 5(2).
+            </p>
+            <p>
+              <span className="underlineText">{formatDate(new Date())}</span>{" "}
+              <span className="underlineText">{props.first_name}</span>{" "}
+              <img src={props.signature} />
+            </p>
+            <p>
+              {" "}
+              תאריך &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+              &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; שם
+              העובד
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              חתימה
+            </p>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default Certification;

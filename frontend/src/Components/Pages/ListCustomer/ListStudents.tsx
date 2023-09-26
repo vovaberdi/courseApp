@@ -7,6 +7,8 @@ import { MyModal } from "../../popModal/popModal";
 import { store } from "../../../store/store";
 import PopDeleteBtn from "../../popDeleteBtn/popDeleteBtn";
 import Instructor from "../../../models/instructorModel";
+import { login } from "../../../store/student-state";
+import API_URLS from "../../../config";
 
 
 function ListStudents(): JSX.Element {
@@ -15,24 +17,33 @@ function ListStudents(): JSX.Element {
     const [instructor,setInstructor] = useState<Instructor[]>([]);
     const [selectedOption, setSelectedOption] = useState<String>();
 
+    const [wallChanged, setWallChanged] = useState(true);
+
+    const handleDeleteCompany = (deletedStudentId: number) => {
+        setStudent(student.filter(item => item.id !== deletedStudentId));
+    };
+
  
     useEffect(() => {
-         const url = "http://localhost:3001/student/all";
+         const url = API_URLS.allStudents;
          axios.get(url)
         .then((response) => {
           setStudent(response.data)
         }).catch((error) => {console.log("error", error);});
-        const url2 = "http://localhost:3001/instructor/all";
+
+        const url2 = API_URLS.allInstructors;
         axios.get(url2)
         .then((response) => {
             setInstructor(response.data)
         }).catch((error) => {console.log("error", error);});
+        
     }, []);
 
+
+
+        //  const deleteStudent = store.getState().StudentState.student;
         // setStudent(student.filter(singleStudent => singleStudent.id !== id))
 
-
-         const signature = store.getState().StudentState.student;
 
          const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
             const value = event.target.value;
@@ -45,8 +56,8 @@ function ListStudents(): JSX.Element {
         <div className="ListCustomer">
                         
 
-            <TableContainer maxWidth="80%" align-self="center" rounded='md' boxShadow='dark-lg'>
-                <Table variant='striped' colorScheme='teal'>
+            <TableContainer maxWidth="100%" align-self="center" rounded='md' boxShadow='dark-lg'>
+                <Table variant='striped' colorScheme='teal' >
                 <Thead>
                     <Tr>
                         <Th>Id</Th>
@@ -76,14 +87,14 @@ function ListStudents(): JSX.Element {
                         <Td>{item.address}</Td>
                         <Td>{item.email}</Td>
                         <Td>
-                            <Select onChange={selectChange}   mt="4rem" placeholder='Select course'>
+                            <Select required onChange={selectChange}  size='sm'  mt="4rem" placeholder='Select course'>
                                     {instructor.map((item, i) => (
                                     <option  key={i}value={item.id}>{item.first_name}</option>))}
                             </Select>
                         </Td>
                         <Td><img src={item.signature} /></Td>
-                        <Td><PopDeleteBtn id={item.id} course_id={item.course_id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} data_of_birth={item.data_of_birth} tel={item.tel} address={item.address} email={item.email} signature={""} instructor={""}/></Td>
-                        <Td><MyModal id={item.id} course_id={item.course_id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} tel={item.tel} address={item.address} email={item.email} signature={item.signature} data_of_birth={item.data_of_birth} instructor={`${selectedOption}`}/></Td>
+                        <Td onClick={() => setStudent} ><PopDeleteBtn itemType="student" id={item.id} onDelete={() => handleDeleteCompany(item.id)} /></Td>
+                        <Td><MyModal id={item.id} course_id={item.course_id} first_name={item.first_name} last_name={item.last_name} personal_id={item.personal_id} tel={item.tel} address={item.address} email={item.email} signature={item.signature} data_of_birth={item.data_of_birth} companyId={item.companyId} instructor={`${selectedOption}`} /></Td>
                     </Tr>)} 
                 </Tbody>
             </Table>

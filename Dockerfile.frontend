@@ -1,0 +1,33 @@
+# Use the official Node.js image as the base image
+FROM node:18 as build  
+
+
+# Set the working directory in the container
+WORKDIR /app/frontend
+
+# Copy the package.json and package-lock.json files to the container
+COPY frontend/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY frontend/ .
+
+# Build the React app
+RUN npm run build
+
+# Use a lightweight Node.js image for serving the built app
+FROM node:18-slim
+
+# Set the working directory in the container
+WORKDIR /app/frontend
+
+# Copy the built app from the build stage
+COPY --from=build /app/frontend/build .
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Start the app
+CMD ["npx", "serve", "-s", "."]

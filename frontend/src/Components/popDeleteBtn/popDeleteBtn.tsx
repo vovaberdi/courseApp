@@ -4,19 +4,36 @@ import Student from "../../models/studentModal";
 import axios from "axios";
 import { store } from "../../store/store";
 import { login } from "../../store/student-state";
+import API_URLS from "../../config";
 
 
 
-function PopDeleteBtn(props: Student): JSX.Element {
+
+  function PopDeleteBtn(props: {
+    id: number;
+    itemType: 'student' | 'course' | 'instructor' | 'company';
+    onDelete: () => void; // Define onDelete prop type
+  }): JSX.Element {
     const { isOpen, onToggle, onClose } = useDisclosure()
     // setStudent(student.filter(singleStudent => singleStudent.id !== id))
+    const { id, itemType } = props;
 
+    const urls = {
+      student: `${API_URLS.base}/student/${id}`,
+      course: `${API_URLS.base}/course/${id}`,
+      instructor: `${API_URLS.base}/instructor/${id}`,
+      company: `${API_URLS.base}/company/${id}`,
+    };
+  
+    const url = urls[itemType as 'student' | 'course' | 'instructor' | 'company'];
+  
+    const deleteId = (id:any) => {
+      store.dispatch(login(id));
 
-
-    const deleteId = (id:number) => {
-        const url = `http://localhost:3001/student/${id}`;
          axios.delete(url)
         .then((response) => { 
+            props.onDelete();
+        
         }).catch((error) => {console.log("error", error);});
     }
 

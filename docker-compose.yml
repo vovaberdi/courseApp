@@ -1,0 +1,33 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_BACKEND_URL: http://backend:3001
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "3001:3001"
+    environment:
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - PERSONAL_EMAIL=${PERSONAL_EMAIL}
+    volumes:
+      - ./uploads:/app/backend/uploads
+
+  db:
+    image: mysql:8
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+    volumes:
+      - ./mysql_data:/var/lib/mysql
